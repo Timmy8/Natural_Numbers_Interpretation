@@ -11,7 +11,7 @@ public class Main {
         static final String FOURTEEN_SYMBOLS_PATTER = "(^00302\\d{9}$)" + "|" + "(^003069\\d{8}$)";
     }
     public static void main(String[] args) {
-        int enteredStringLength = -1;
+        int enteredStringLength;
         String enteredStringNoSpace;
 
         System.out.println(ConstValues.WELCOME_STRING);
