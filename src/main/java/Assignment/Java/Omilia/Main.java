@@ -3,36 +3,39 @@ package Assignment.Java.Omilia;
 import java.util.Scanner;
 
 public class Main {
-    public static class ConstValues{
+    public static final class ConstValues{
         static final String WELCOME_STRING = "Enter phone number(and press enter):";
         static final String PHONE_NUMBER_VALID = "[phone number: VALID]";
         static final String PHONE_NUMBER_INVALID = "[phone number: INVALID]";
         static final String TEN_SYMBOLS_PATTERN = "(^2\\d{9}$)" + "|" + "(^69\\d{8}$)";
         static final String FOURTEEN_SYMBOLS_PATTERN = "(^00302\\d{9}$)" + "|" + "(^003069\\d{8}$)";
+
+        private ConstValues(){}
     }
+
     public static void main(String[] args) {
         String input, inputNumber;
-        StringBuilder numberBuilder = new StringBuilder();
 
         System.out.println(ConstValues.WELCOME_STRING);
         Scanner scanner = new Scanner(System.in);
 
         input = scanner.nextLine().trim();
-        for (String part : input.split("\\s+"))
-            if (part.matches("\\d{1,3}")) {
-                numberBuilder.append(part);
-            } else {
-                System.err.println("Invalid part of number: " + part);
-                return;
-            }
 
-        inputNumber = numberBuilder.toString();
+        try {
+            inputNumber = createNumberFromInput(input);
+        } catch (RuntimeException ex){
+            System.err.println(ex.getMessage());
+            return;
+        }
+
         System.out.print(inputNumber + "\t");
 
         if (isValidGreekNumber(inputNumber))
             System.out.println(ConstValues.PHONE_NUMBER_VALID);
         else
             System.out.println(ConstValues.PHONE_NUMBER_INVALID);
+
+        scanner.close();
     }
 
     public static boolean isValidGreekNumber(String number){
@@ -50,5 +53,18 @@ public class Main {
                 return false;
             }
         }
+    }
+
+    public static String createNumberFromInput(String input){
+        StringBuilder numberBuilder = new StringBuilder();
+
+        for (String part : input.split("\\s+"))
+            if (part.matches("\\d{1,3}")) {
+                numberBuilder.append(part);
+            } else {
+                throw new RuntimeException("Invalid part of number: " + part);
+            }
+
+        return numberBuilder.toString();
     }
 }
