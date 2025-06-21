@@ -15,12 +15,14 @@ public class Main {
 
 
     public static void main(String[] args) {
+        List<String> allPossibleNumbers;
         String input, inputAsNumber;
         System.out.println(ConstValues.WELCOME_STRING);
 
         try (Scanner scanner = new Scanner(System.in)){
             input = scanner.nextLine();
             inputAsNumber = createNumberFromInput(input);
+            allPossibleNumbers = getAllPossibleNumbers(input);
         } catch (RuntimeException ex){
             System.err.println(ex.getMessage());
             return;
@@ -30,7 +32,6 @@ public class Main {
         System.out.println(inputAsNumber + "\t" + (isValidGreekNumber(inputAsNumber)? ConstValues.PHONE_NUMBER_VALID : ConstValues.PHONE_NUMBER_INVALID));
 
         System.out.println("--- Advanced version ---");
-        List<String> allPossibleNumbers = getAllPossibleNumbers(input);
         List<String> uniquePossibleNumber = new ArrayList<>(new HashSet<>(allPossibleNumbers));
 
         for (int i = 0; i < uniquePossibleNumber.size(); i++) {
