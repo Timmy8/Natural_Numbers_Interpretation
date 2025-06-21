@@ -1,7 +1,6 @@
 package Assignment.Java.Omilia;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Application for interpreting sequences of natural numbers entered by the user,
