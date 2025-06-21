@@ -21,4 +21,5 @@ The program accepts user input as a sequence of numbers separated by spaces (eac
 
 ## Example Output
 Interpretation 1: 2106930664 [phone number: VALID]
+
 Interpretation 2: 210693664 [phone number: INVALID]
