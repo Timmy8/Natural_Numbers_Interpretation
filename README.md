@@ -16,10 +16,11 @@ The program accepts user input as a sequence of numbers separated by spaces (eac
 3. Enter a sequence of numbers separated by spaces when prompted  
 4. View all possible interpretations along with phone number validity status  
 
-## Example Input
+## How it works
+*Example Input*
 2 10 6 9 30 6 6 4
 
-## Example Output
+*Example Output*
 Interpretation 1: 2106930664 [phone number: VALID]
 
 Interpretation 2: 210693664 [phone number: INVALID]
