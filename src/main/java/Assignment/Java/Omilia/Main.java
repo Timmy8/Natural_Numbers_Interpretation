@@ -31,18 +31,24 @@ public class Main {
      */
     public static void main(String[] args) {
         List<String> allPossibleNumbers;
+        String[] numberParts;
         String input, inputAsNumber;
         System.out.println(ConstValues.WELCOME_STRING);
 
-        try (Scanner scanner = new Scanner(System.in)){
-            input = scanner.nextLine();
-            String[] numberParts = validateInputAndSplitToParts(input);
-            inputAsNumber = createNumberFromParts(numberParts);
-            allPossibleNumbers = getAllPossibleNumbersFromParts(numberParts);
-        } catch (RuntimeException ex){
-            System.err.println(ex.getMessage());
-            return;
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (true) {
+                input = scanner.nextLine();
+                try {
+                    numberParts = validateInputAndSplitToParts(input);
+                    break;
+                } catch (RuntimeException ex) {
+                    System.err.println(ex.getMessage() + " Please try again.");
+                }
+            }
         }
+
+        inputAsNumber = createNumberFromParts(numberParts);
+        allPossibleNumbers = getAllPossibleNumbersFromParts(numberParts);
 
         System.out.println("--- Basic version ---");
         System.out.println(inputAsNumber + "\t" + (isValidGreekNumber(inputAsNumber)? ConstValues.PHONE_NUMBER_VALID : ConstValues.PHONE_NUMBER_INVALID));
