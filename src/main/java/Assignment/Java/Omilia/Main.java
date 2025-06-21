@@ -74,8 +74,15 @@ public class Main {
     }
 
     public static List<String> getAllPossibleNumbers(String input){
-        String[] tokens = input.split("\\s");
-        List<Integer> parsedParts = Arrays.stream(tokens).mapToInt(Integer::parseInt).boxed().toList();
+        String[] tokens = input.trim().split("\\s");
+        List<Integer> parsedParts = Arrays.stream(tokens)
+                .map(part ->{
+            try{
+                return Integer.parseInt(part);
+            } catch (NumberFormatException ex){
+                throw new RuntimeException("Invalid part of number: " + part);
+            }
+        }).toList();
 
         List<String> result = new ArrayList<>();
         buildCombinations(parsedParts, 0, "", result);
