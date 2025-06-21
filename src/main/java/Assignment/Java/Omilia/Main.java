@@ -11,11 +11,11 @@ import java.util.*;
  */
 public class Main {
     public static final class ConstValues{
-        static final String WELCOME_STRING = "Enter phone number(and press enter):";
-        static final String PHONE_NUMBER_VALID = "[phone number: VALID]";
-        static final String PHONE_NUMBER_INVALID = "[phone number: INVALID]";
-        static final String TEN_SYMBOLS_PATTERN = "(^2\\d{9}$)" + "|" + "(^69\\d{8}$)";
-        static final String FOURTEEN_SYMBOLS_PATTERN = "(^00302\\d{9}$)" + "|" + "(^003069\\d{8}$)";
+        public static final String WELCOME_STRING = "Enter phone number(and press enter):";
+        public static final String PHONE_NUMBER_VALID = "[phone number: VALID]";
+        public static final String PHONE_NUMBER_INVALID = "[phone number: INVALID]";
+        public static final String TEN_SYMBOLS_PATTERN = "(^2\\d{9}$)" + "|" + "(^69\\d{8}$)";
+        public static final String FOURTEEN_SYMBOLS_PATTERN = "(^00302\\d{9}$)" + "|" + "(^003069\\d{8}$)";
 
         private ConstValues(){}
     }
