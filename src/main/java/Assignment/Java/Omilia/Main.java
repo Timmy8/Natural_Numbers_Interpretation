@@ -1,9 +1,6 @@
 package Assignment.Java.Omilia;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static final class ConstValues{
@@ -34,8 +31,10 @@ public class Main {
 
         System.out.println("--- Advanced version ---");
         List<String> allPossibleNumbers = getAllPossibleNumbers(input);
-        for (int i = 0; i < allPossibleNumbers.size(); i++) {
-            String number = allPossibleNumbers.get(i);
+        List<String> uniquePossibleNumber = new ArrayList<>(new HashSet<>(allPossibleNumbers));
+
+        for (int i = 0; i < uniquePossibleNumber.size(); i++) {
+            String number = uniquePossibleNumber.get(i);
             System.out.println(
                     "Interpretation " + (i + 1) + ": " + number + " "
                     + (isValidGreekNumber(number) ? ConstValues.PHONE_NUMBER_VALID : ConstValues.PHONE_NUMBER_INVALID)
@@ -92,7 +91,7 @@ public class Main {
 
     private static void buildCombinations(List<Integer> parsedParts, int index, String currentNumber, List<String> result){
         if (index >= parsedParts.size()) {
-            result.add(currentNumber.trim());
+            result.add(currentNumber);
             return;
         }
 
