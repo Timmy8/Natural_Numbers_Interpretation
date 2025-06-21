@@ -29,9 +29,18 @@ public class Main {
             return;
         }
 
+        System.out.println("--- Basic version ---");
         System.out.println(inputAsNumber + "\t" + (isValidGreekNumber(inputAsNumber)? ConstValues.PHONE_NUMBER_VALID : ConstValues.PHONE_NUMBER_INVALID));
 
-        getAllPossibleNumbers(input);
+        System.out.println("--- Advanced version ---");
+        List<String> allPossibleNumbers = getAllPossibleNumbers(input);
+        for (int i = 0; i < allPossibleNumbers.size(); i++) {
+            String number = allPossibleNumbers.get(i);
+            System.out.println(
+                    "Interpretation " + (i + 1) + ": " + number + " "
+                    + (isValidGreekNumber(number) ? ConstValues.PHONE_NUMBER_VALID : ConstValues.PHONE_NUMBER_INVALID)
+            );
+        }
     }
 
     public static boolean isValidGreekNumber(String number){
@@ -65,47 +74,45 @@ public class Main {
     }
 
     public static List<String> getAllPossibleNumbers(String input){
-        List<List<String>> options = new ArrayList<>();
         String[] tokens = input.split("\\s");
         List<Integer> parsedParts = Arrays.stream(tokens).mapToInt(Integer::parseInt).boxed().toList();
 
-        for (int i = 0; i < parsedParts.size(); i++){
-            List<String> variants = new ArrayList<>();
-            int currentPart = parsedParts.get(i);
-            int nextPart = (i + 1 < parsedParts.size())?parsedParts.get(i + 1) : Integer.MAX_VALUE;
+        List<String> result = new ArrayList<>();
+        buildCombinations(parsedParts, 0, "", result);
 
-            variants.add(String.valueOf(currentPart));
+        return result;
+    }
 
-            if ((currentPart % 100 == 0 && nextPart < 100) || (currentPart % 10 == 0 && nextPart < 10)){
-                variants.add(String.valueOf(currentPart + nextPart));
-
-                System.out.println("i: " + variants);
-            }
-
-            if (currentPart > 20 && currentPart < 100  && currentPart % 10 != 0){
-                String firstVariant = String.valueOf((currentPart / 10) * 10);
-                String secondVariant = String.valueOf(currentPart % 10);
-                variants.add(firstVariant + " " + secondVariant);
-
-                System.out.println("i: " + variants);
-            } else if (currentPart > 100 && currentPart < 1000  && currentPart % 100 != 0){
-                String firstVariant = String.valueOf((currentPart / 100) * 100);
-                String secondVariant = String.valueOf(currentPart % 100);
-                variants.add(firstVariant + " " + secondVariant);
-
-                System.out.println("i: " + variants);
-            }
-
-            options.add(variants);
-//            if (parsedParts[i] > 10 && parsedParts[i] < 100 && parsedParts[i] % 10 != 0){
-//                String possiblePart = ((parsedParts[i] / 10) * 10) + " " + (parsedParts[i] % 10);
-//                System.out.println("pp3: " + parsedParts[i] + " : " + possiblePart);
-//            } else if (parsedParts[i] > 100 && parsedParts[i] < 1000 && parsedParts[i] % 100 != 0){
-//                String possiblePart = ((parsedParts[i] / 100) * 100) + " " + (parsedParts[i] % 100);
-//                System.out.println("pp4: " + parsedParts[i] + " : " + possiblePart);
-//            }
+    private static void buildCombinations(List<Integer> parsedParts, int index, String currentNumber, List<String> result){
+        if (index >= parsedParts.size()) {
+            result.add(currentNumber.trim());
+            return;
         }
 
-        return possibleNumbers;
+        int currentPart = parsedParts.get(index);
+
+        buildCombinations(parsedParts, index + 1, currentNumber + currentPart, result);
+
+        // Check if we can combine two numbers into one
+        if (index + 1 < parsedParts.size()){
+            int nextPart = parsedParts.get(index + 1);
+
+            if ((currentPart % 100 == 0 && nextPart < 100) || (currentPart > 20 && currentPart % 10 == 0 && nextPart < 10)){
+                int variant = currentPart + nextPart;
+                buildCombinations(parsedParts, index + 2, currentNumber + variant, result);
+            }
+        }
+
+        // Check if we can split one number into two different
+        if (currentPart > 20 && currentPart < 100  && currentPart % 10 != 0){
+            int firstVariant = (currentPart / 10) * 10;
+            int secondVariant = currentPart % 10;
+            buildCombinations(parsedParts, index + 1, currentNumber + firstVariant + secondVariant, result);
+
+        } else if (currentPart > 100 && currentPart < 1000  && currentPart % 100 != 0){
+            int firstVariant = (currentPart / 100) * 100;
+            int secondVariant = currentPart % 100;
+            buildCombinations(parsedParts, index + 1, currentNumber + firstVariant + secondVariant, result);
+        }
     }
 }
