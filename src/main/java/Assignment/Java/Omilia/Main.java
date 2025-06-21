@@ -1,6 +1,7 @@
 package Assignment.Java.Omilia;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Application for interpreting sequences of natural numbers entered by the user,
@@ -36,8 +37,9 @@ public class Main {
 
         try (Scanner scanner = new Scanner(System.in)){
             input = scanner.nextLine();
-            inputAsNumber = createNumberFromInput(input);
-            allPossibleNumbers = getAllPossibleNumbers(input);
+            String[] numberParts = validateInputAndSplitToParts(input);
+            inputAsNumber = createNumberFromParts(numberParts);
+            allPossibleNumbers = getAllPossibleNumbersFromParts(numberParts);
         } catch (RuntimeException ex){
             System.err.println(ex.getMessage());
             return;
@@ -56,6 +58,23 @@ public class Main {
                     + (isValidGreekNumber(number) ? ConstValues.PHONE_NUMBER_VALID : ConstValues.PHONE_NUMBER_INVALID)
             );
         }
+    }
+
+    /**
+     * Splits the input string by spaces and validates that each part
+     * is a number containing 1 to 3 digits.
+     *
+     * @param input the input string
+     * @return array of validated number parts as strings
+     * @throws RuntimeException if any part is invalid
+     */
+    public static String[] validateInputAndSplitToParts(String input){
+            String[] parts = input.trim().split("\\s+");
+            for (String part : parts)
+                if (!part.matches("\\d{1,3}"))
+                    throw new RuntimeException("Invalid part of number: " + part);
+
+            return parts;
     }
 
     /**
@@ -86,28 +105,20 @@ public class Main {
     }
 
     /**
-     * Constructs a concatenated number string from the user input.
-     *
-     * The input should be a sequence of numbers separated by spaces,
-     * where each number consists of 1 to 3 digits.
+     * Constructs a concatenated number string from the user input parts.
      *
      * Example:
      * Input: "30 2 5 58"
      * Output: "302558"
      *
-     * @param input the raw input string containing numbers separated by spaces
+     * @param numberParts the raw input string containing numbers separated by spaces
      * @return a single concatenated string representing the combined number
-     * @throws RuntimeException if any part of the input is not a valid number with 1 to 3 digits
      */
-    public static String createNumberFromInput(String input){
+    public static String createNumberFromParts(String[] numberParts){
         StringBuilder numberBuilder = new StringBuilder();
 
-        for (String part : input.trim().split("\\s+"))
-            if (part.matches("\\d{1,3}")) {
+        for (String part : numberParts)
                 numberBuilder.append(part);
-            } else {
-                throw new RuntimeException("Invalid part of number: " + part);
-            }
 
         return numberBuilder.toString();
     }
@@ -118,20 +129,11 @@ public class Main {
      *
      * For example, the input "20 5" could produce "205" and "25".
      *
-     * @param input a string containing numbers separated by spaces (each number up to three digits)
+     * @param numberParts a string array containing numbers parts (each number up to three digits)
      * @return a list of all possible combined number interpretations as strings
-     * @throws RuntimeException if any part of the input is not a valid integer
      */
-    public static List<String> getAllPossibleNumbers(String input){
-        String[] tokens = input.trim().split("\\s");
-        List<Integer> parsedParts = Arrays.stream(tokens)
-                .map(part ->{
-            try{
-                return Integer.parseInt(part);
-            } catch (NumberFormatException ex){
-                throw new RuntimeException("Invalid part of number: " + part);
-            }
-        }).toList();
+    public static List<String> getAllPossibleNumbersFromParts(String[] numberParts){
+        List<Integer> parsedParts = Arrays.stream(numberParts).map(Integer::parseInt).toList();
 
         List<String> result = new ArrayList<>();
         buildCombinations(parsedParts, 0, "", result);
@@ -156,9 +158,10 @@ public class Main {
 
         int currentPart = parsedParts.get(index);
 
+        // Add the current part
         buildCombinations(parsedParts, index + 1, currentNumber + currentPart, results);
 
-        // Check if we can combine two numbers into one
+        // Combine with the next part if it forms a valid alternative
         if (index + 1 < parsedParts.size()){
             int nextPart = parsedParts.get(index + 1);
 
@@ -168,7 +171,7 @@ public class Main {
             }
         }
 
-        // Check if we can split one number into two different
+        // Split current part into multiple parts if possible
         if (currentPart > 20 && currentPart < 100  && currentPart % 10 != 0){
             int firstVariant = (currentPart / 10) * 10;
             int secondVariant = currentPart % 10;
