@@ -21,7 +21,7 @@ public class Main {
         String input, inputAsNumber;
         System.out.println(ConstValues.WELCOME_STRING);
 
-        try (Scanner scanner = new Scanner(System.in);){
+        try (Scanner scanner = new Scanner(System.in)){
             input = scanner.nextLine();
             inputAsNumber = createNumberFromInput(input);
         } catch (RuntimeException ex){
