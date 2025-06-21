@@ -30,7 +30,7 @@ public class Main {
      * @param args command line arguments (not used)
      */
     public static void main(String[] args) {
-        List<String> allPossibleNumbers;
+        Set<String> allPossibleNumbers;
         String[] numberParts;
         String input, inputAsNumber;
         System.out.println(ConstValues.WELCOME_STRING);
@@ -54,13 +54,12 @@ public class Main {
         System.out.println(inputAsNumber + "\t" + (isValidGreekNumber(inputAsNumber)? ConstValues.PHONE_NUMBER_VALID : ConstValues.PHONE_NUMBER_INVALID));
 
         System.out.println("--- Advanced version ---");
-        List<String> uniquePossibleNumber = new ArrayList<>(new HashSet<>(allPossibleNumbers));
 
-        for (int i = 0; i < uniquePossibleNumber.size(); i++) {
-            String number = uniquePossibleNumber.get(i);
+        int counter = 1;
+        for (String number : allPossibleNumbers) {
             System.out.println(
-                    "Interpretation " + (i + 1) + ": " + number + " "
-                    + (isValidGreekNumber(number) ? ConstValues.PHONE_NUMBER_VALID : ConstValues.PHONE_NUMBER_INVALID)
+                    "Interpretation " + (counter++) + ": " + number + " "
+                            + (isValidGreekNumber(number) ? ConstValues.PHONE_NUMBER_VALID : ConstValues.PHONE_NUMBER_INVALID)
             );
         }
     }
@@ -135,12 +134,12 @@ public class Main {
      * For example, the input "20 5" could produce "205" and "25".
      *
      * @param numberParts a string array containing numbers parts (each number up to three digits)
-     * @return a list of all possible combined number interpretations as strings
+     * @return a set of all possible combined number interpretations as strings
      */
-    public static List<String> getAllPossibleNumbersFromParts(String[] numberParts){
+    public static Set<String> getAllPossibleNumbersFromParts(String[] numberParts){
         List<Integer> parsedParts = Arrays.stream(numberParts).map(Integer::parseInt).toList();
 
-        List<String> result = new ArrayList<>();
+        Set<String> result = new HashSet<>();
         buildCombinations(parsedParts, 0, "", result);
 
         return result;
@@ -153,9 +152,9 @@ public class Main {
      * @param parsedParts List of input numbers as integer
      * @param index Current index in the input list
      * @param currentNumber String accumulating the current interpretation
-     * @param results List collecting all generated interpretations
+     * @param results Set collecting all generated interpretations
      */
-    private static void buildCombinations(List<Integer> parsedParts, int index, String currentNumber, List<String> results){
+    private static void buildCombinations(List<Integer> parsedParts, int index, String currentNumber, Set<String> results){
         if (index >= parsedParts.size()) {
             results.add(currentNumber);
             return;
